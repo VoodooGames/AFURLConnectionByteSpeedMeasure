@@ -3,7 +3,7 @@ Pod::Spec.new do |spec|
   spec.version      = '1.0.1'
   spec.platform     = :ios, '6.0'
   spec.license      = 'MIT'
-  spec.source       = { :git => 'https://github.com/OliverLetterer/AFURLConnectionByteSpeedMeasure.git', :tag => spec.version.to_s }
+  spec.source       = { :git => 'https://github.com/VoodooGames/AFURLConnectionByteSpeedMeasure.git', :branch => "master" }
   spec.source_files = 'AFURLConnectionByteSpeedMeasure'
   spec.frameworks   = 'Foundation'
   spec.requires_arc = true
@@ -11,5 +11,5 @@ Pod::Spec.new do |spec|
   spec.summary      = 'Extends AFNetworking with the ability to measure connection speed and estimate completion time.'
   spec.author       = { 'Oliver Letterer' => 'oliver.letterer@gmail.com' }
 
-  spec.dependency     'AFNetworking', '~> 1.0'
+  spec.dependency     'AFNetworking', '~> 2.0'
 end
