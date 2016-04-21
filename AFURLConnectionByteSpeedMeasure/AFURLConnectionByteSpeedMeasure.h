@@ -43,7 +43,7 @@
 /**
  The request start time.
  */
-@property (nonatomic, assign) NSTimeInterval startTime;
+@property (nonatomic, assign) double startTime;
 
 /**
  The `speed` in a human readable format.
@@ -63,7 +63,7 @@
 /**
  Updates the calculated speed if `active` is `YES`.
  */
-- (void)updateSpeedWithDataChunkLength:(NSUInteger)dataChunkLength receivedAtDate:(NSDate *)date;
+- (void)updateSpeedWithDataChunkLength:(NSUInteger)dataChunkLength receivedAtTime:(double)time;
 
 /**
  Computes the estimated remaining time in seconds based on the current `speed`.

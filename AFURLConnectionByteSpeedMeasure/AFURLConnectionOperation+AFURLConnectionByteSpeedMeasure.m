@@ -78,7 +78,7 @@ static inline void class_swizzleSelector(Class class, SEL originalSelector, SEL 
 - (void)__AFURLConnectionByteSpeedMeasureOperationDidStart
 {
     [self __AFURLConnectionByteSpeedMeasureOperationDidStart];
-    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+    double now = CACurrentMediaTime();
     dispatch_async(dispatch_get_main_queue(), ^{
         self.uploadSpeedMeasure.startTime = now;
     });
@@ -91,11 +91,10 @@ static inline void class_swizzleSelector(Class class, SEL originalSelector, SEL 
                                   totalBytesWritten:(NSInteger)totalBytesWritten
                           totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite
 {
-    NSDate *now = [NSDate date];
-    
+    double now = CACurrentMediaTime();
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.uploadSpeedMeasure updateSpeedWithDataChunkLength:bytesWritten receivedAtDate:now];
-        self.downloadSpeedMeasure.startTime = [now timeIntervalSince1970];
+        [self.uploadSpeedMeasure updateSpeedWithDataChunkLength:bytesWritten receivedAtTime:now];
+        self.downloadSpeedMeasure.startTime = now;
     });
     
     [self __AFURLConnectionByteSpeedMeasureConnection:connection
@@ -108,10 +107,9 @@ static inline void class_swizzleSelector(Class class, SEL originalSelector, SEL 
                      didReceiveData:(NSData *)data
 {
     NSUInteger length = data.length;
-    NSDate *now = [NSDate date];
-    
+    double now = CACurrentMediaTime();
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.downloadSpeedMeasure updateSpeedWithDataChunkLength:length receivedAtDate:now];
+        [self.downloadSpeedMeasure updateSpeedWithDataChunkLength:length receivedAtTime:now];
     });
     
     [self __AFURLConnectionConnection:connection didReceiveData:data];

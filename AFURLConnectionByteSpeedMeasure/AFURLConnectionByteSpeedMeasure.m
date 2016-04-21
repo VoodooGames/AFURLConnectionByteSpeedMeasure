@@ -40,7 +40,7 @@
 
 #pragma mark - Setters and getters
 
-- (void)setStartTime:(NSTimeInterval)startTime {
+- (void)setStartTime:(double)startTime {
     _startTime = startTime;
 }
 
@@ -72,7 +72,7 @@
 
 #pragma mark - Instance methods
 
-- (void)updateSpeedWithDataChunkLength:(NSUInteger)dataChunkLength receivedAtDate:(NSDate *)date
+- (void)updateSpeedWithDataChunkLength:(NSUInteger)dataChunkLength receivedAtTime:(double)time
 {
     if (!self.active) {
         return;
@@ -84,9 +84,9 @@
     }
     
     [_chunkLengthsArray addObject:@((double)dataChunkLength)];
-    [_timesArray addObject:@(date.timeIntervalSince1970)];
+    [_timesArray addObject:@(time)];
     
-    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+    double now = CACurrentMediaTime();
     if (now - _lastSpeedCalculationTimeInterval < self.speedCalculationTimeInterval) {
         return;
     }
