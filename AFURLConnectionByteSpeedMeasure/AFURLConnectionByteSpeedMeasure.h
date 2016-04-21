@@ -41,6 +41,11 @@
 @property (nonatomic, readonly) double speed;
 
 /**
+ The request start time.
+ */
+@property (nonatomic, assign) NSTimeInterval startTime;
+
+/**
  The `speed` in a human readable format.
  */
 @property (nonatomic, copy, readonly) NSString *humanReadableSpeed;
@@ -51,7 +56,7 @@
 @property (nonatomic, assign) NSUInteger windowSize;
 
 /**
- Speed calculation will only happen if the last calculation if `speedCalculationTimeInterval` seconds in the past. Default is 1.0.
+ Speed calculation will only happen if the last calculation if `speedCalculationTimeInterval` seconds in the past. Default is 0 (calculation happens on each chunks).
  */
 @property (nonatomic, assign) NSTimeInterval speedCalculationTimeInterval;
 

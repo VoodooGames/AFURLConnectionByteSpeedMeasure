@@ -57,8 +57,9 @@ static inline void class_swizzleSelector(Class class, SEL originalSelector, SEL 
 #pragma mark - Initialization
 
 + (void)load
-{
+{    
     class_swizzleSelector(self, @selector(initWithRequest:), @selector(__AFURLConnectionByteSpeedMeasureInitWithRequest:));
+    class_swizzleSelector(self, @selector(operationDidStart), @selector(__AFURLConnectionByteSpeedMeasureOperationDidStart));
     class_swizzleSelector(self, @selector(connection:didSendBodyData:totalBytesWritten:totalBytesExpectedToWrite:), @selector(__AFURLConnectionByteSpeedMeasureConnection:didSendBodyData:totalBytesWritten:totalBytesExpectedToWrite:));
     class_swizzleSelector(self, @selector(connection:didReceiveData:), @selector(__AFURLConnectionConnection:didReceiveData:));
 }
@@ -72,6 +73,16 @@ static inline void class_swizzleSelector(Class class, SEL originalSelector, SEL 
                                  [[AFURLConnectionByteSpeedMeasure alloc] init], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return self;
+}
+
+- (void)__AFURLConnectionByteSpeedMeasureOperationDidStart
+{
+    [self __AFURLConnectionByteSpeedMeasureOperationDidStart];
+    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.uploadSpeedMeasure.startTime = now;
+        self.downloadSpeedMeasure.startTime = now;
+    });
 }
 
 #pragma mark - NSURLConnectionDelegate

@@ -36,9 +36,13 @@
 @end
 
 @implementation AFURLConnectionByteSpeedMeasure
-@synthesize active = _active, speed = _speed, humanReadableSpeed = _humanReadableSpeed, windowSize = _windowSize, speedCalculationTimeInterval = _speedCalculationTimeInterval;
+@synthesize active = _active, speed = _speed, humanReadableSpeed = _humanReadableSpeed, windowSize = _windowSize, speedCalculationTimeInterval = _speedCalculationTimeInterval, startTime = _startTime;
 
 #pragma mark - Setters and getters
+
+- (void)setStartTime:(NSTimeInterval)startTime {
+    _startTime = startTime;
+}
 
 - (void)setSpeed:(double)speed
 {
@@ -59,8 +63,8 @@
         _windowSize = 64;
         _timesArray = [NSMutableArray arrayWithCapacity:_windowSize];
         _chunkLengthsArray = [NSMutableArray arrayWithCapacity:_windowSize];
-        _speedCalculationTimeInterval = 1.0;
-        _lastSpeedCalculationTimeInterval = [[NSDate date] timeIntervalSince1970];
+        _speedCalculationTimeInterval = 0;
+        _lastSpeedCalculationTimeInterval = 0;
         _humanReadableSpeed = [self _humanReadableSpeedFromSpeed:_speed];;
     }
     return self;
@@ -82,17 +86,13 @@
     [_chunkLengthsArray addObject:@((double)dataChunkLength)];
     [_timesArray addObject:@(date.timeIntervalSince1970)];
     
-    if (_chunkLengthsArray.count <= 1) {
-        return;
-    }
-    
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
     if (now - _lastSpeedCalculationTimeInterval < self.speedCalculationTimeInterval) {
         return;
     }
     
     NSNumber *totalBytesUploaded = [_chunkLengthsArray valueForKeyPath:@"@sum.self"];
-    NSTimeInterval overallTime = [_timesArray.lastObject doubleValue] - [_timesArray[0] doubleValue];
+    NSTimeInterval overallTime = [_timesArray.lastObject doubleValue] - self.startTime;
     
     self.speed = totalBytesUploaded.doubleValue / overallTime;
     _lastSpeedCalculationTimeInterval = now;
