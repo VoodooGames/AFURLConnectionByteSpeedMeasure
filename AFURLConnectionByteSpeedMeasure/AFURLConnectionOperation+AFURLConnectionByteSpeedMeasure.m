@@ -81,7 +81,6 @@ static inline void class_swizzleSelector(Class class, SEL originalSelector, SEL 
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
     dispatch_async(dispatch_get_main_queue(), ^{
         self.uploadSpeedMeasure.startTime = now;
-        self.downloadSpeedMeasure.startTime = now;
     });
 }
 
@@ -96,6 +95,7 @@ static inline void class_swizzleSelector(Class class, SEL originalSelector, SEL 
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.uploadSpeedMeasure updateSpeedWithDataChunkLength:bytesWritten receivedAtDate:now];
+        self.downloadSpeedMeasure.startTime = [now timeIntervalSince1970];
     });
     
     [self __AFURLConnectionByteSpeedMeasureConnection:connection
